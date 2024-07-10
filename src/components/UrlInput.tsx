@@ -8,7 +8,7 @@ interface Props {
 export const UrlInput : FC<Props> =({urlWeb, onChange}) => {
   return (
     <input
-        className="mt-1 h-[24px] w-[280px] rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+        className="sm:w-[280px] w-60 mt-1 h-[30px] mx-2  rounded-md border border-gray-300 px-3 py-2 text-black shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
         type="url"
         placeholder="www.ejemplo.com"
         value={urlWeb}
