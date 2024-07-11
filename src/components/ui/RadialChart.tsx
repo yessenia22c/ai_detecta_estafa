@@ -17,7 +17,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-const chartData = [{ verificacion: "Web", estafa: 70, confiable: 30 }]
+//const chartData = [{ verificacion: "Web", estafa: 70, confiable: 30 }]
 
 const chartConfig = {
   estafa: {
@@ -30,7 +30,9 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function RadialChart() {
+export function RadialChart({ estafa = 0, confiable = 0}) {
+  const chartData = [{ verificacion: "Web", estafa, confiable }]
+
   const totalVisitors = chartData[0].estafa + chartData[0].confiable
 
   return (
@@ -50,10 +52,10 @@ export function RadialChart() {
             innerRadius={80}
             outerRadius={130}
           >
-            {/* <ChartTooltip
+            <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
-            /> */}
+            />
             <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
               <Label
                 content={({ viewBox }) => {
