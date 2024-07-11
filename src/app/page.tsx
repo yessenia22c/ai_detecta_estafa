@@ -3,7 +3,9 @@ import { APIKeyInput } from "@/components/APIKeyInput";
 import { ModelSelect } from "@/components/ModelSelect";
 import { UrlInput } from "@/components/UrlInput";
 import { RadialChart } from "@/components/ui/RadialChart";
-import { OpenAIModel } from "@/types/types";
+import { OpenAIModel, VerificationUrl } from "@/types/types";
+import axios from "axios";
+import { List } from "postcss/lib/list";
 import { useState } from "react";
 
 
@@ -12,10 +14,10 @@ export default function Home() {
   const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
   const [apiKey, setApiKey] = useState<string>('');
   const [urlWeb, setUrlWeb] = useState<string>('');
+  const [responseString, setResponseString] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleVerification = async () => {
-    const maxCodeLength = model === 'gpt-3.5-turbo' ? 6000 : 12000;
 
     if (!apiKey) {
       alert('Por favor, introduzca una clave de API OpenAI válida');
@@ -24,6 +26,23 @@ export default function Home() {
     if (!urlWeb) {
       alert('Por favor, introduzca una url válida');
       return;
+      
+    }
+    let data : VerificationUrl={
+      url: urlWeb,
+      model: model,
+      apiKey: apiKey
+    }
+    
+
+    try {
+      setLoading(true);
+      const res = await axios.post('/api/verification', data);
+
+      setResponseString(res.data.text);
+      setLoading(false);
+    } catch (error) {
+      console.error('Ocurrio algo:', error);
     }
   }; 
   const handleApiKeyChange = (value: string) => {
@@ -36,6 +55,7 @@ export default function Home() {
     console.log(value);
     setUrlWeb(value);
   };
+  //const response = JSON.parse(responseString);
   return (
     <>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#091224] px-4 pb-20 text-neutral-200 sm:px-10">
@@ -62,6 +82,17 @@ export default function Home() {
           
         </div>
         <RadialChart></RadialChart>
+            {/* <ul>
+                {response.data && response.data.factores_negativos.map((factor: any) => (
+                    <li key={factor.id}>{factor.descripion}</li>
+                ))}
+            </ul>
+            <ul>
+                {response.data && response.data.factores_positivos.map((factor: any) => (
+                    <li key={factor.id}>{factor.descripion}</li>
+                ))}
+            </ul> */}
+        <p>{responseString}</p>
       </div>
     </>
   );
