@@ -3,10 +3,11 @@ import { APIKeyInput } from "@/components/APIKeyInput";
 import { ModelSelect } from "@/components/ModelSelect";
 import { UrlInput } from "@/components/UrlInput";
 import { RadialChart } from "@/components/ui/RadialChart";
-import { OpenAIModel, VerificationUrl } from "@/types/types";
+import { Factores, OpenAIModel, RespuestaOpenAI, VerificationUrl } from "@/types/types";
 import axios from "axios";
 import { List } from "postcss/lib/list";
 import { useState } from "react";
+import { set } from "zod";
 
 
 
@@ -14,10 +15,12 @@ export default function Home() {
   const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
   const [apiKey, setApiKey] = useState<string>('');
   const [urlWeb, setUrlWeb] = useState<string>('');
-  const [responseString, setResponseString] = useState<string>('');
+  const [responseString, setResponseString] = useState<RespuestaOpenAI>();
   const [loading, setLoading] = useState<boolean>(false);
-
+  const [activado, setActivado] = useState<boolean>(true);
+  let response : RespuestaOpenAI ;
   const handleVerification = async () => {
+    
 
     if (!apiKey) {
       alert('Por favor, introduzca una clave de API OpenAI válida');
@@ -37,11 +40,16 @@ export default function Home() {
 
     try {
       setLoading(true);
+      setActivado(false);
       const res = await axios.post('/api/verification', data);
 
-      setResponseString(res.data.text);
+      setResponseString(res.data);
+      
       setLoading(false);
+      setActivado(true);
+      
     } catch (error) {
+      setLoading(false);
       console.error('Ocurrio algo:', error);
     }
   }; 
@@ -55,7 +63,7 @@ export default function Home() {
     console.log(value);
     setUrlWeb(value);
   };
-  //const response = JSON.parse(responseString);
+  console.log(responseString);
   return (
     <>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#091224] px-4 pb-20 text-neutral-200 sm:px-10">
@@ -72,7 +80,9 @@ export default function Home() {
             <ModelSelect model={model} onChange={(value) => setModel(value)} />
 
             <button
-              className="w-[140px] cursor-pointer rounded-md bg-green-600 px-4 py-2 font-bold hover:bg-green-500 active:bg-green-700"
+              className={`w-[140px] cursor-pointer rounded-md px-4 py-2 font-bold ${
+                activado ? 'bg-green-600 hover:bg-green-500 active:bg-green-700': 'bg-gray-400 cursor-not-allowed' 
+              }`}
               onClick={() => handleVerification()}
               disabled={loading}
             >
@@ -81,18 +91,26 @@ export default function Home() {
           </div>
           
         </div>
-        <RadialChart></RadialChart>
-            {/* <ul>
-                {response.data && response.data.factores_negativos.map((factor: any) => (
-                    <li key={factor.id}>{factor.descripion}</li>
-                ))}
-            </ul>
-            <ul>
-                {response.data && response.data.factores_positivos.map((factor: any) => (
-                    <li key={factor.id}>{factor.descripion}</li>
-                ))}
-            </ul> */}
-        <p>{responseString}</p>
+        <RadialChart confiable={responseString?.data.probabilidad_confiable} estafa={responseString?.data.probabilidad_estafa}></RadialChart>
+            <div className="flex flex-row p-4 mx-4 gap-8">
+            <div>
+              <h2 className="font-medium text-[18px]"> Factores negativos</h2>
+              <ul>
+                  {responseString?.data && responseString?.data?.factores_negativos?.map((factor: Factores) => (
+                      <li className=" text-[14px] w-[350px] p-2 border rounded-md my-2 border-red-600" key={factor.id}>{factor.descripcion}</li>
+                  ))}
+              </ul>
+            </div>
+            <div>
+              <h2 className="font-medium text-[18px]"> Factores positivos</h2>
+              <ul>
+                  {responseString?.data && responseString?.data?.factores_positivos?.map((factor: Factores) => (
+                      <li className=" text-[14px] w-[350px] p-2 border rounded-md my-2 border-green-600"  key={factor.id}>{factor.descripcion}</li>
+                  ))}
+              </ul>
+            </div>
+            </div>
+        {/* <p>{responseString?.data}</p> */}
       </div>
     </>
   );
