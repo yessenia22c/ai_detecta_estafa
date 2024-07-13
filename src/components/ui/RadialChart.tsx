@@ -36,7 +36,8 @@ export function RadialChart({ estafa = 0, confiable = 0}) {
   const totalVisitors = chartData[0].estafa + chartData[0].confiable
 
   return (
-    <Card className="flex flex-col">
+    <div className="py-12">
+      <Card className="flex flex-col ">
       <CardHeader className="items-center pb-0">
         <CardTitle>Verificación de sitio</CardTitle>
         <CardDescription>Resultados</CardDescription>
@@ -115,5 +116,6 @@ export function RadialChart({ estafa = 0, confiable = 0}) {
         </div>
       </CardFooter>
     </Card>
+    </div>
   )
 }
