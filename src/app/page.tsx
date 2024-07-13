@@ -67,7 +67,7 @@ export default function Home() {
   return (
     <>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#091224] px-4 pb-20 text-neutral-200 sm:px-10">
-        <div className="flex flex-col items-center justify-between p-24">
+        <div className="flex flex-col items-center justify-between py-8">
           <APIKeyInput
             apiKey={apiKey}
             onChange={handleApiKeyChange}
@@ -92,25 +92,32 @@ export default function Home() {
           
         </div>
         <RadialChart confiable={responseString?.data.probabilidad_confiable} estafa={responseString?.data.probabilidad_estafa}></RadialChart>
-            <div className="flex flex-row p-4 mx-4 gap-8">
-            <div>
-              <h2 className="font-medium text-[18px]"> Factores negativos</h2>
-              <ul>
-                  {responseString?.data && responseString?.data?.factores_negativos?.map((factor: Factores) => (
-                      <li className=" text-[14px] w-[350px] p-2 border rounded-md my-2 border-red-600" key={factor.id}>{factor.descripcion}</li>
-                  ))}
-              </ul>
-            </div>
-            <div>
-              <h2 className="font-medium text-[18px]"> Factores positivos</h2>
-              <ul>
-                  {responseString?.data && responseString?.data?.factores_positivos?.map((factor: Factores) => (
-                      <li className=" text-[14px] w-[350px] p-2 border rounded-md my-2 border-green-600"  key={factor.id}>{factor.descripcion}</li>
-                  ))}
-              </ul>
-            </div>
-            </div>
-        {/* <p>{responseString?.data}</p> */}
+        <a href="#resultados" >Ver resultados</a>
+        <div id="resultados" className="md:flex flex-row p-4 mx-4 gap-8">
+          <div>
+            <h2 className="font-medium text-[18px]"> Factores negativos</h2>
+            <ul>
+                {responseString?.data && responseString?.data?.factores_negativos?.map((factor: Factores) => (
+                    <li className=" text-[14px] w-[350px] p-2 border-2 rounded-md my-4 border-red-600" key={factor.id}>
+                      <img className="absolute -mt-4 -ml-4" src="/error.svg" alt="posibles puntos de estafas" />
+                      
+                      {factor.descripcion}</li>
+                ))}
+            </ul>
+          </div>
+          <div>
+            <h2 className="font-medium text-[18px]"> Factores positivos</h2>
+            <ul>
+                {responseString?.data && responseString?.data?.factores_positivos?.map((factor: Factores) => (
+                    <li className=" text-[14px] w-[350px] p-2 border-2 rounded-md my-4 border-green-600"  key={factor.id}>
+                      <img className="absolute -mt-4 -ml-4" src="/check.svg" alt="posibles puntos de estafas" />
+                      {factor.descripcion}
+                    
+                    </li>
+                ))}
+            </ul>
+          </div>
+        </div>
       </div>
     </>
   );
