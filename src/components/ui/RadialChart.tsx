@@ -36,16 +36,16 @@ export function RadialChart({ estafa = 0, confiable = 0}) {
   const totalVisitors = chartData[0].estafa + chartData[0].confiable
 
   return (
-    <div className="py-12">
-      <Card className="flex flex-col ">
+    <div className="py-16">
+      <Card className="flex flex-col bg-[#091224] ">
       <CardHeader className="items-center pb-0">
-        <CardTitle>Verificación de sitio</CardTitle>
-        <CardDescription>Resultados</CardDescription>
+        <CardTitle className="text-white">Verificación de sitio</CardTitle>
+        <CardDescription className="text-white">Resultados</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-1 items-center pb-0">
+      <CardContent className="flex flex-1 items-center pb-0 text-white">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square w-full max-w-[250px]"
+          className="mx-auto aspect-square w-full max-w-[250px] "
         >
           <RadialBarChart
             data={chartData}
@@ -62,18 +62,18 @@ export function RadialChart({ estafa = 0, confiable = 0}) {
                 content={({ viewBox }) => {
                   if (viewBox && "cx" in viewBox && "cy" in viewBox) {
                     return (
-                      <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
+                      <text className="text-white" x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) - 16}
-                          className="fill-foreground text-2xl font-bold"
+                          className="text-2xl font-bold fill-[#fff]"
                         >
                           {totalVisitors.toLocaleString()}%
                         </tspan>
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 4}
-                          className="fill-muted-foreground"
+                          className="fill-[#fff] "
                         >
                           Escaneo completo
                         </tspan>
@@ -100,11 +100,11 @@ export function RadialChart({ estafa = 0, confiable = 0}) {
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col gap-2 text-sm text-white">
         <div className="flex items-center gap-2 font-medium leading-none">
         Los resultados del escaneo del sitio web son: 
         </div>
-        <div className="leading-none text-muted-foreground">
+        <div className="leading-none text-[#fff]">
             <div className="flex flex-row items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="hsl(var(--chart-1))"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Z"/></svg>
                 <p className="py-2 mx-2">Estafa {chartData[0].estafa}% </p> 
