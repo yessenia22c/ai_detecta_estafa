@@ -1,6 +1,7 @@
 "use client";
 import { APIKeyInput } from "@/components/APIKeyInput";
 import { ModelSelect } from "@/components/ModelSelect";
+import { Resultados } from "@/components/Resultados";
 import { UrlInput } from "@/components/UrlInput";
 import { RadialChart } from "@/components/ui/RadialChart";
 import { Factores, OpenAIModel, RespuestaOpenAI, VerificationUrl } from "@/types/types";
@@ -8,17 +9,21 @@ import axios from "axios";
 import { List } from "postcss/lib/list";
 import { useState } from "react";
 import { set } from "zod";
+import { z } from "zod";
 
-
-
+const urlSchema = z.string().url();
 export default function Home() {
   const [model, setModel] = useState<OpenAIModel>('gpt-3.5-turbo');
   const [apiKey, setApiKey] = useState<string>('');
   const [urlWeb, setUrlWeb] = useState<string>('');
   const [responseString, setResponseString] = useState<RespuestaOpenAI>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [verificando, setVerificando] = useState<boolean>(false);
   const [activado, setActivado] = useState<boolean>(true);
+  const [urlError, setUrlError] = useState<string>('');
   let response : RespuestaOpenAI ;
+
+  
   const handleVerification = async () => {
     
 
@@ -26,11 +31,18 @@ export default function Home() {
       alert('Por favor, introduzca una clave de API OpenAI válida');
       return;
     }
-    if (!urlWeb) {
-      alert('Por favor, introduzca una url válida');
+    try {
+      urlSchema.parse(urlWeb);
+      setUrlError(''); // Clear the error if URL is valid
+    } catch (error) {
+      setUrlError('La URL no es válida');
       return;
-      
     }
+    // if (!urlWeb) {
+    //   alert('Por favor, introduzca una url válida');
+    //   return;
+      
+    // }
     let data : VerificationUrl={
       url: urlWeb,
       model: model,
@@ -40,6 +52,7 @@ export default function Home() {
 
     try {
       setLoading(true);
+      setVerificando(true);
       setActivado(false);
       const res = await axios.post('/api/verification', data);
 
@@ -75,6 +88,7 @@ export default function Home() {
           <div className="p-6 flex flex-col items-center">
             <label htmlFor="Url"> Introduce la url a verficar</label>
             <UrlInput urlWeb={urlWeb} onChange={handleUrl}></UrlInput>
+            {urlError && <p className="text-red-500 text-sm mt-2">{urlError}</p>}
           </div>
           <div className="mt-2 flex items-center space-x-2">
             <ModelSelect model={model} onChange={(value) => setModel(value)} />
@@ -91,33 +105,23 @@ export default function Home() {
           </div>
           
         </div>
-        <RadialChart confiable={responseString?.data.probabilidad_confiable} estafa={responseString?.data.probabilidad_estafa}></RadialChart>
-        <a href="#resultados" >Ver resultados</a>
-        <div id="resultados" className="md:flex flex-row p-4 mx-4 gap-8">
+        <div className={verificando?"block":"hidden"}>
+          {loading ? 
+          <div className="flex justify-center items-center">
+            <h3 className="absolute text-[16px]">Analizando...</h3>
+            <video className="mix-blend-screen" width="720" height="520" src="/analizando-web.webm" loop autoPlay muted></video>
+          </div>:
           <div>
-            <h2 className="font-medium text-[18px]"> Factores negativos</h2>
-            <ul>
-                {responseString?.data && responseString?.data?.factores_negativos?.map((factor: Factores) => (
-                    <li className=" text-[14px] w-[350px] p-2 border-2 rounded-md my-4 border-red-600" key={factor.id}>
-                      <img className="absolute -mt-4 -ml-4" src="/error.svg" alt="posibles puntos de estafas" />
-                      
-                      {factor.descripcion}</li>
-                ))}
-            </ul>
+            <RadialChart confiable={responseString?.data.probabilidad_confiable} estafa={responseString?.data.probabilidad_estafa}></RadialChart>
+
+            <Resultados responseString={responseString}></Resultados>
           </div>
-          <div>
-            <h2 className="font-medium text-[18px]"> Factores positivos</h2>
-            <ul>
-                {responseString?.data && responseString?.data?.factores_positivos?.map((factor: Factores) => (
-                    <li className=" text-[14px] w-[350px] p-2 border-2 rounded-md my-4 border-green-600"  key={factor.id}>
-                      <img className="absolute -mt-4 -ml-4" src="/check.svg" alt="posibles puntos de estafas" />
-                      {factor.descripcion}
-                    
-                    </li>
-                ))}
-            </ul>
-          </div>
+          
+          }
         </div>
+        
+        
+        
       </div>
     </>
   );
