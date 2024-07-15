@@ -55,6 +55,7 @@ export async function POST(req: Request) {
         ),
       data: z.object({
         url: z.string().describe("la url del sitio web analizado"),
+        descripcion: z.string().describe("una descripción consierando la url del sitio web, tomando encuenta el nombre y la extensión del dominio y si tiene https o no"),
         factores_negativos: z.array(
           z.object({
             id: z.number(),
@@ -81,6 +82,7 @@ export async function POST(req: Request) {
           .describe(
             "probabilidad de que el sitio web sea confiable del 1 al 100"
           ),
+        recomendacion: z.string().describe("una recomendación final hacer de lo que se analizó y sie s confiable o no el sitio web"),
       }),
     }),
   });
