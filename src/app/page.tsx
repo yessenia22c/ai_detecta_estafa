@@ -20,12 +20,14 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(false);
   const [verificando, setVerificando] = useState<boolean>(false);
   const [activado, setActivado] = useState<boolean>(true);
+  const [existeData, setExisteData] = useState<boolean>(false);
   const [urlError, setUrlError] = useState<string>('');
+
   let response : RespuestaOpenAI ;
 
   
   const handleVerification = async () => {
-    
+    setExisteData(false);
 
     if (!apiKey) {
       alert('Por favor, introduzca una clave de API OpenAI válida');
@@ -55,8 +57,8 @@ export default function Home() {
       setVerificando(true);
       setActivado(false);
       const res = await axios.post('/api/verification', data);
-
       setResponseString(res.data);
+      if(res.data) setExisteData(true);
       
       setLoading(false);
       setActivado(true);
@@ -76,11 +78,11 @@ export default function Home() {
     console.log(value);
     setUrlWeb(value);
   };
-  console.log(responseString);
+  //console.log(responseString);
   return (
     <>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#091224] px-4 pb-20 text-neutral-200 sm:px-10">
-        <div className="flex flex-col items-center justify-between py-8">
+        <div className="flex flex-col items-center justify-between py-16">
           <APIKeyInput
             apiKey={apiKey}
             onChange={handleApiKeyChange}
@@ -105,20 +107,19 @@ export default function Home() {
           </div>
           
         </div>
-        <div className={verificando?"block":"hidden"}>
-          {loading ? 
-          <div className="flex justify-center items-center">
-            <h3 className="absolute text-[16px]">Analizando...</h3>
+        
+          {existeData ? 
+           <Resultados responseString={responseString}></Resultados>:
+           <div className={ ` ${verificando? "block": "hidden"} "flex justify-center items-center py-16`}>
+            {/* <h3 className="absolute text-[16px]">Analizando...</h3> */}
             <video className="mix-blend-screen" width="720" height="520" src="/analizando-web.webm" loop autoPlay muted></video>
-          </div>:
-          <div>
-            <RadialChart confiable={responseString?.data.probabilidad_confiable} estafa={responseString?.data.probabilidad_estafa}></RadialChart>
-
-            <Resultados responseString={responseString}></Resultados>
           </div>
+            
+
+            
+      
           
           }
-        </div>
         
         
         
