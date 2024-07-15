@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     prompt: context,
     system:
       `Eres un experto analista de sitios web fraudulentos, que intentan vender productos o 
-      servicios a través de internet, 
+      servicios a través de internet con el objetivo de estafar a los usuarios, 
       enlistas siempre al menos un máximo de 5 factores positivos y negativos de 
       un sitio web si tienes suficente información para tu análisis y das una 
       probabilidad de que sea una estafa o confiable, la suma de ambas no debe pasar de 100, 
@@ -83,12 +83,7 @@ export async function POST(req: Request) {
           ),
       }),
     }),
-    //   || z.object({
-    //     status: z.number().describe('el estado debe ser 404'),
-    //     message: z.string().describe('No hay suficiente información para analizar'),
-    //   }),
   });
-  console.log("RESULTADO", resultado.toJsonResponse().body);
 
   return resultado.toJsonResponse();
 }
