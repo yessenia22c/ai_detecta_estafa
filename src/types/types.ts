@@ -17,10 +17,12 @@ export interface RespuestaOpenAI {
 
 export interface Data {
   url:                    string;
+  descripcion:            string;
   factores_positivos:     Factores[];
   factores_negativos:     Factores[];
   probabilidad_estafa:    number;
   probabilidad_confiable: number;
+  recomendacion:          string;
 }
 
 export interface Factores {
