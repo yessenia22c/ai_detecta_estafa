@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Fraud Detection AI",
-  description: "Fraud Detection AI using OpenAI",
+  title: "AI Detecta estafas",
+  description: "Analiza sitio web para detectar estafas usando OpenAI",
 };
 
 export default function RootLayout({

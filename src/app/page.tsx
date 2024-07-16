@@ -1,5 +1,6 @@
 "use client";
 import { APIKeyInput } from "@/components/APIKeyInput";
+import { Footer } from "@/components/Footer";
 import { ModelSelect } from "@/components/ModelSelect";
 import { Resultados } from "@/components/Resultados";
 import { UrlInput } from "@/components/UrlInput";
@@ -82,6 +83,7 @@ export default function Home() {
   return (
     <>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#091224] px-4 pb-20 text-neutral-200 sm:px-10">
+        <h1 className="text-3xl font-bold text-center mt-8">AI Detecta estafas</h1>
         <div className="flex flex-col items-center justify-between py-16">
           <APIKeyInput
             apiKey={apiKey}
@@ -128,6 +130,7 @@ export default function Home() {
         
         
       </div>
+      <Footer></Footer>
     </>
   );
 }
