@@ -107,7 +107,11 @@ export default function Home() {
           </div>
           
         </div>
-        
+        <div className={` ${verificando? "hidden": ""} flex flex-col m-0 justify-center items-center`}>
+          <img className="w-[530px] animate-upDown" src="/robot-analizando-1.webp" alt="un robot analizando un sitio web"/>
+          <img className="w-[480px] animate-upDownScala" src="/luz-robot.webp" alt="luz del robot" />
+        </div>
+        {/* <video className="mix-blend-screen" width="520" height="520" src="/robot-analizando.webm" loop autoPlay muted></video> */}
           {existeData ? 
            <Resultados responseString={responseString}></Resultados>:
            <div className={ ` ${verificando? "block": "hidden"} "flex justify-center items-center py-16`}>
