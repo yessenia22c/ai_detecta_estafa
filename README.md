@@ -1,4 +1,8 @@
 Este proyecto está desarrollado con Next.js
+
+Para pruebas se debe proporcionar la ```OpenAI API Key``` en el input que se muestra en el sitio web o ser proporcionada como variable de entorno el el fichero .env.local.example
+OPENAI_API_KEY=YOUR_KEY_HERE
+
 ## Empezando
 
 ```bash
