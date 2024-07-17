@@ -3,17 +3,15 @@ import { APIKeyInput } from "@/components/APIKeyInput";
 import { Footer } from "@/components/Footer";
 import { ModelSelect } from "@/components/ModelSelect";
 import { Resultados } from "@/components/Resultados";
-import { UrlInput } from "@/components/UrlInput"
-import Head from "next/head";
+import { UrlInput } from "@/components/UrlInput";
 import {
-  Factores,
   OpenAIModel,
   RespuestaOpenAI,
   VerificationUrl,
 } from "@/types/types";
 import axios from "axios";
 import { useState } from "react";
-import { z } from "zod";
+import { set, z } from "zod";
 
 
 const urlSchema = z.string().url();
@@ -28,7 +26,6 @@ export default function Home() {
   const [existeData, setExisteData] = useState<boolean>(false);
   const [urlError, setUrlError] = useState<string>("");
 
-  let response: RespuestaOpenAI;
 
   const handleVerification = async () => {
     setExisteData(false);
@@ -61,37 +58,43 @@ export default function Home() {
       setActivado(false);
       const res = await axios.post("/api/verification", data);
       setResponseString(res.data);
+      console.log(res.data);
       if (res.data) setExisteData(true);
+      if(res.data.status){
+        if(res.data.status === 404){
+          setUrlError("No se pudo analizar el sitio web, por favor intente con otra url.");
+          setExisteData(false);
+          setVerificando(false);
+          setLoading(false);
+          setActivado(true);
+          return;
+        }
+      }
 
       setLoading(false);
       setActivado(true);
     } catch (error) {
+      setVerificando(false);
       setLoading(false);
       console.error("Ocurrio algo:", error);
     }
   };
   const handleApiKeyChange = (value: string) => {
-    console.log(value);
     setApiKey(value);
 
     localStorage.setItem("apiKey", value);
   };
   const handleUrl = (value: string) => {
-    console.log(value);
     setUrlWeb(value);
   };
   //console.log(responseString);
   return (
     <>
-      <Head>
-        <meta property="og:image" content="/web.png"/>
-        <meta property="og:type" content="website" />
-      </Head>
       <div className="flex h-full min-h-screen flex-col items-center bg-[#091224] px-4 py-20 text-neutral-200 sm:px-10">
-        <h1 className="text-3xl font-bold text-center mt-8">
+        <h1 className="text-3xl font-bold text-center mt-2">
           AI Detecta estafas
         </h1>
-        <div className="flex flex-col items-center justify-between py-16">
+        <div className="flex flex-col items-center justify-between py-14">
           <APIKeyInput
             apiKey={apiKey}
             onChange={handleApiKeyChange}
