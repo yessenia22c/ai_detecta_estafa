@@ -7,6 +7,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "AI Detecta estafas",
   description: "Analiza sitio web para detectar estafas usando OpenAI",
+  keywords: "OpenAI, AI, Detecta, Estafas, Verificación, Sitio Web",
+  
 };
 
 export default function RootLayout({
@@ -16,6 +18,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <meta property="og:image" content="/web.png"/>
+        <meta property="og:type" content="website" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
