@@ -1,6 +1,12 @@
 # Ai Detecta Estafa
 ![web](https://github.com/user-attachments/assets/998afe03-805a-48ba-8497-a509159b84a4)
 
+Video de demostración
+
+
+https://github.com/user-attachments/assets/5ad8d16d-66f8-4664-8ef6-66d7f8bd19e8
+
+
 
 Este proyecto está desarrollado con la tecnología de Next.js
 
